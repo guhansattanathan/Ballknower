@@ -1,0 +1,185 @@
+body{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    margin: 0px;
+}
+header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F4F8D3;
+}
+
+header a{
+    text-decoration: none;
+    color: black;
+    height: 100%;
+}
+
+header a:hover{
+    background-color: #F7CFD8;
+    color: black;
+    border-radius: 5px;
+    transition: 15ms linear;
+}
+
+
+header div:hover{
+    background-color: #F7CFD8;
+    color: black;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 15ms linear;
+}
+
+header p{
+    margin: 25px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 25px;
+}
+
+.title{
+    display: flex;
+    justify-content: center;
+}
+
+.title h1{
+    margin: 15px;
+    font-size: 8rem;
+    
+}
+
+.subtitle{
+    display: flex;
+    justify-content: center;
+}
+
+.subtitle h2{
+    font-size: 4rem;
+    margin: 15px;
+}
+
+.description{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.description p{
+    font-size: 3rem;
+    margin: 15px;
+    max-width: 900px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+}
+
+.games{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.games div{
+    padding: 30px;
+    width: 100%;
+    margin: 5px;
+}
+
+
+.games h3{
+    font-size: 4rem;
+}
+
+.games div p{
+    font-size: 30px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    display: flex;
+    justify-content: center;
+    color: white;
+    z-index: 1;
+}
+
+.games a {
+    width: 100%;
+    text-decoration: none;
+    color: white;
+    display: block; 
+}
+
+.games a div {
+    width: 100%;
+    height: 120px; 
+    margin: 5px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+div.college-check{
+    background-image: url("/images/basketball-background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+}
+
+div.jersey-check{
+    background-image: url("/images/test2.gif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+}
+
+div.coming-soon{
+    background-image: url("/images/test.gif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.gif{
+    margin-top: 15px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inspiration{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.inspiration div{
+    display: flex;
+    justify-content: center;
+}
+
+.inspiration h3{
+    font-size: 4rem;
+}
+.inspiration p{
+    font-size: 30px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    max-width: 900px;
+}
+
+.strap{
+    color: black;
+}
+
+.anton-regular {
+  font-family: "Anton", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.anton-sc-regular {
+  font-family: "Anton SC", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0px;
+}

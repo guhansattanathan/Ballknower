@@ -1,0 +1,244 @@
+body{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    margin: 0px;
+}
+
+header{
+    background-color: #F4F8D3;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+header a{
+    text-decoration: none;
+    width: 25%;
+    text-align: right;
+}
+
+header p{
+    color: black;
+    font-size: 25px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header p:hover{
+    background-color: #F7CFD8;
+    border-radius: 5px;
+    transition: 15ms linear;
+}
+
+header div{
+    height: 90px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.exit-btn{
+    display: flex;
+    justify-content: right;
+}
+
+div.logo{
+    display: flex;
+    justify-content: left;
+    margin-left: 10px;
+}
+
+.question{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.question p{
+    font-size: 40px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.player{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.player p{
+    font-size: 4rem;
+    margin: 0px;
+}
+
+.panel{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.panel .streak-section{
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.streak-section{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.streak-section p{
+    font-size: 35px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0px;
+}
+
+.panel .answer-section{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.panel .score-section{
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.score-section p{
+    margin: 10px;
+    font-size: 30px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+input[name="option"]{
+    width: 300px;
+    height: 50px;
+    font-size: 30px;
+    border-radius: 10px;
+    border: 2px solid black;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.answer-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.answer-section div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.answer-section div.btns{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.mcq-option {
+
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 20px;
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 5px;
+    border: 2px solid black;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+input[type="radio"] {
+  display: none;
+}
+input[type="radio"]:checked {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+.answer-section input[type="submit"]{
+    margin: 10px;
+    width: auto;
+    height: auto;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 30px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    border: 2px solid black;
+}
+
+.answer-section input[type="submit"]:hover{
+    cursor: pointer;
+}
+
+input[value="Check Answer"]:hover{
+    background-color: #578FCA;
+}
+
+.game-over p{
+    color: red;
+    margin: 0px;
+    font-size: 3rem;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+input[value="Check Answer"]:hover{
+    background-color: #578FCA;
+}
+
+input[value="Skip"]:hover{
+    background-color: #0ABAB5;
+}
+
+input[value="Next Question"]:hover{
+    background-color: #B4E50D;
+}
+
+input[value="Restart"]:hover{
+    background-color: #B4E50D;
+}
+
+.reveal p{
+    font-size: 35px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+}
+
+.reveal p[class="anton-sc-regular"]{
+    font-size: 5rem;
+    font-weight: bolder;
+}
+
+.anton-regular {
+  font-family: "Anton", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.anton-sc-regular {
+  font-family: "Anton SC", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0px;
+}

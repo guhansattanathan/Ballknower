@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="/styles/number.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton+SC&family=League+Gothic&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>  
+
+    <div class="logo">
+        <img src="/images/logo.png" alt="Logo" height="60px">
+    </div>
+
+    <div class="exit-btn">
+       <a href="/">
+        <div>
+            <p>Exit</p>
+        </div>
+       </a>   
+    </div>
+    </header>
+    
+
+    <% if (lives >= 0) { %>
+
+    <section class="question">
+
+        <div>
+           <p>What jersey number does this player wear?</p> 
+        </div>
+        
+    </section>
+
+    <section class="player">
+        <div>
+            <p class="anton-sc-regular"><%= player %></p>
+        </div>
+    </section>
+
+    <% } %>
+    
+    <section class="panel">
+
+        <div class="streak-section">
+        <% if(streak >= 3){ %>
+            <img src="/images/streak.gif" height="100px" />
+            <p><%= streak %> in a row!</p>
+        <% } %>
+        </div>
+
+        <div class="answer-section">
+
+            <form action="/JerseyCheck" method="post">
+            <% if (!result && lives>0) { %>
+                <input type="number" name="option" placeholder="Enter your guess....." min="0" max="99">
+                <input type="hidden" name="answer" value="<%= number %>">
+                
+                <div>
+                 <input type="submit" value="Check Answer" formaction="/JerseyCheck">
+                 <input type="submit" value="Skip" formaction="/JerseySkip">   
+                </div>
+                
+            <% } %>
+            </form>
+
+            <div class="reveal">
+                <% if(result === "correct"){ %>
+                <p style="font-size: 50px; color: green;">That's correct!</p>
+                <% } else if (result === "incorrect"){ %>
+                    <p>Nope, the correct answer is:</p>
+                    <p class="anton-sc-regular"><%= number %></p>
+                <% } else { %>
+                    <h2></h2>
+                <% } %>
+
+                <% if(result && lives>0){ %>
+                    <form action="/JerseyNext" method="post">
+                        <input type="submit" value="Next Question">
+                    </form>
+                <% } %>
+            </div>
+            
+            <br>
+            <% if (lives === 0) { %>
+                <div class="game-over">
+                    <p>Game over</p>
+                    <form action="/JerseyRestart" method="post">
+                    <input type="submit" value="Restart">
+                    </form>   
+                </div>
+                
+            <% } %>
+    
+        </div>
+
+        <div class="score-section">
+            <p>Score: <%= score %></p>
+            <p>High Score: <%= maxScore %></p>
+            <p>Lives: 
+                <%for(let i = 0; i < lives; i++){%>
+                    <img src="/images/logo.png" height="25px">
+                <% } %>    
+            </p>
+        </div>
+
+    </section>
+
+</body>
+</html>

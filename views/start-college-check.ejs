@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="/styles/start.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton+SC&family=League+Gothic&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>  
+
+    <div class="logo">
+        <img src="/images/logo.png" alt="Logo" height="60px">
+    </div>
+
+    <div class="exit-btn">
+       <a href="/">
+        <div>
+            <p>Exit</p>
+        </div>
+       </a>   
+    </div>
+    </header>
+
+    <section class="title">
+       <h1 class="anton-sc-regular">CollegeCheck</h1> 
+    </section>
+
+    <div class="gif">
+        <img src="/images/college-logo.gif" height="400px">
+    </div>
+    
+    <div class="rules">
+        <h2 class="anton-sc-regular">Rules: </h2>
+    </div>
+
+    <div class="rules-list">
+        <ul>
+            <li>You will be given a player and need to guess what college they went to</li>
+            <li>For each right anwer, you score a point</li>
+            <li>For each wrong answer, you lose a life</li>
+            <li>You have the option to skip a question, but a point is taken off your score for each skip</li>
+            <li>You have a total of 3 lives and the game ends once you lose all 3 lives</li>
+            <li>The goal is to get the highest score possible</li>
+        </ul>
+    </div>
+
+    <div class="good-luck">
+        <h2 class="anton-sc-regular">Good Luck!</h2>
+    </div>
+    
+    <form action="/startCollegeCheck" method="post">
+        <input type="submit" value="Start Game">
+    </form>
+    
+</body>
+</html>
