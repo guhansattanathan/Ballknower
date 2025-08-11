@@ -26,6 +26,17 @@ const configForCollege = {
   }
 }
 
+//Configuration for Database
+const db = new pg.Client({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT
+});
+
+db.connect();
+
 //List containing the valid queries to get a team's data
 const validTeams = [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 38, 40, 41];
 
