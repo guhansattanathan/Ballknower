@@ -3,12 +3,16 @@ import bodyParser from "body-parser";
 import axios from "axios";
 import pg from "pg";
 import env from "dotenv";
+import bcrypt from "bcrypt";
 
 env.config();
 
 //Setting up express
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+//Salt rounds
+const saltRounds = 8;
 
 //Middleware
 app.use(bodyParser.urlencoded({extended: true}));
@@ -84,6 +88,41 @@ async function generateOtherChoices(correctCollege) {
 
   return Array.from(choices).sort(() => 0.5 - Math.random());
 }
+
+//GET request to login page
+app.get("/register", (req, res) =>{
+    res.render("register.ejs");
+})
+
+//POST request to login route that will insert user info into the database
+app.post("/register", async (req, res) => {
+    try{
+        console.log(req.body);
+        const username = req.body.username;
+        const password = req.body.password;
+        
+        bcrypt.hash(password, saltRounds, async (err, hash) =>{
+            if(err){
+                console.log(err);
+                res.status(500).send("Cannot configure password");
+            } else {
+
+              try{
+                await db.query("INSERT INTO users(username, password) VALUES($1, $2)", [username, hash]);
+                res.redirect("/");  
+              } catch(err){
+                console.error(err);
+                res.status(500).send("Cannot insert into DB");
+              } 
+              
+            }
+        })
+        
+    }catch(err){
+        console.log(err);
+        res.status(500).send("Error registering user");
+    }
+});
 
 //GET Request to render the homepage
 app.get("/", (req, res) => {
