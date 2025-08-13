@@ -31,6 +31,15 @@
         </div>
       </a>
     </div>
+    <% if(locals.username){ %>
+      <div class="login">
+      <a href="/login">
+      <div>
+        <p><%= username %></p>
+      </div>
+    </a>
+    </div>
+    <% }  else {%>  
     <div class="login">
       <a href="/login">
       <div>
@@ -38,6 +47,7 @@
       </div>
     </a>
     </div>
+    <% } %>
     
   </header>
 

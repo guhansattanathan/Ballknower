@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 //Salt rounds
-const saltRounds = 8;
+const saltRounds = 10;
 
 //Middleware
 app.use(bodyParser.urlencoded({extended: true}));
@@ -114,7 +114,7 @@ app.post("/register", async (req, res) => {
 
               try{
                 await db.query("INSERT INTO users(username, password) VALUES($1, $2)", [username, hash]);
-                res.redirect("/");  
+                res.redirect(`/?username=${username}`);  
               } catch(err){
                 console.error(err);
                 res.status(500).send("Cannot insert into DB");
@@ -148,7 +148,7 @@ app.post("/login", async (req, res) => {
                 res.status(500).send(err);
             } else {
                 if(result){
-                    res.redirect("/")
+                    res.redirect(`/?username=${username}`); 
                 } else {
                     console.log("Incorrect password");
                 }
@@ -167,8 +167,11 @@ app.post("/login", async (req, res) => {
 
 //GET Request to render the homepage
 app.get("/", (req, res) => {
-    res.render("index.ejs");
+
+  res.render("index.ejs", { username: req.query.username || null });
+
 });
+
 
 //GET Request that opens the starting page of CollegeCheck
 app.get("/startCollegeCheck", (req, res) => {
