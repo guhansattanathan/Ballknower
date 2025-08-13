@@ -89,12 +89,17 @@ async function generateOtherChoices(correctCollege) {
   return Array.from(choices).sort(() => 0.5 - Math.random());
 }
 
-//GET request to login page
+//GET request to register page
 app.get("/register", (req, res) =>{
     res.render("register.ejs");
 })
 
-//POST request to login route that will insert user info into the database
+//GET request to login page
+app.get("/login", (req, res) => {
+    res.render("login.ejs");
+})
+
+//POST request to register route that will insert user info into the database
 app.post("/register", async (req, res) => {
     try{
         console.log(req.body);
@@ -121,6 +126,42 @@ app.post("/register", async (req, res) => {
     }catch(err){
         console.log(err);
         res.status(500).send("Error registering user");
+    }
+});
+
+//POST request to login route that will authenticate the user
+
+app.post("/login", async (req, res) => {
+
+    console.log(req.body);
+    const username = req.body.username;
+    const password = req.body.password;
+
+    try{
+        const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+
+        if(result.rows.length > 0){
+          const storedPassword = result.rows[0].password;
+          bcrypt.compare(password, storedPassword, (err, result) => {
+            if(err){
+                console.log(err);
+                res.status(500).send(err);
+            } else {
+                if(result){
+                    res.redirect("/")
+                } else {
+                    console.log("Incorrect password");
+                }
+
+            }
+            });  
+        } else {
+            console.log("User not found");
+        }
+        
+    } catch(err){
+        console.log(err);
+        res.status(500).send("Login error");
     }
 });
 

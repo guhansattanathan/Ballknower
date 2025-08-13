@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/styles/login-register.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton+SC&family=League+Gothic&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>  
@@ -21,14 +26,25 @@
     </div>
     </header>
 
+    <div class="title">
+        <h1 class="anton-sc-regular">Registration Page</h1>
+    </div>
+
     <section class="register">
 
         <form action="/register" method="post">
-            <label for="username">Username: </label>
-            <input type="text" name="username">
-            <label for="password">Password: </label>
-            <input type="password" name="password">
-            <input type="submit" value="Register">
+            <div>
+              <label for="username">Username: </label>
+            <input type="text" name="username" maxlength="15">   
+            </div>
+            <div>
+              <label for="password">Password: </label>
+            <input type="password" name="password">  
+            </div>
+            <div>
+              <input type="submit" value="Register">  
+            </div>
+            
         </form>
     </section>
 </body>

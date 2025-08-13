@@ -5,6 +5,7 @@ body{
     margin: 0px;
 }
 header{
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,8 +25,26 @@ header a:hover{
     transition: 15ms linear;
 }
 
+header div.logo{
+    width: 25%;
+    display: flex;
+    justify-content: left;
+    margin-left: 10px;
+}
 
-header div:hover{
+header div.nav{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+header div.login{
+    width: 25%;
+    display: flex;
+    justify-content: right;
+}
+
+header div div:hover{
     background-color: #F7CFD8;
     color: black;
     cursor: pointer;
