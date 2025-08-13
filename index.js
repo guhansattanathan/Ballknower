@@ -33,6 +33,34 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+  if (!req.session.collegeGame) {
+    req.session.collegeGame = {
+      playerCollegeForAnswer: null,
+      playerFirstNameForAnswer: null,
+      playerLastNameForAnswer: null,
+      score: 0,
+      maxScore: 0,
+      lives: 3,
+      streak: 0,
+    };
+  }
+
+  if (!req.session.jerseyGame) {
+    req.session.jerseyGame = {
+      JerseyPlayerNumberForAnswer: null,
+      JerseyPlayerFirstNameForAnswer: null,
+      JerseyPlayerLastNameForAnswer: null,
+      JerseyScore: 0,
+      JerseyMaxScore: 0,
+      JerseyLives: 3,
+      JerseyStreak: 0,
+    };
+  }
+
+  next();
+});
+
 //Global Cache without session
 let teamCache = {};
 
@@ -194,15 +222,6 @@ app.post("/startCollegeCheck", (req, res) => {
     res.redirect("/CollegeCheck");
 })
 
-//Global variables to store the answers & score
-let playerCollegeForAnswer = null;
-let playerFirstNameForAnswer = null;
-let playerLastNameForAnswer = null;
-let score = 0
-let maxScore = 0;
-let lives = 3;
-let streak = 0
-
 
 /* 
 GET Request to the CollegeCheck endpoint
@@ -210,23 +229,25 @@ Runs the game logic
 */
 app.get("/CollegeCheck", async (req, res) => {
 
+    const game = req.session.collegeGame;
+
   try {
 
     if(req.query.result === "correct"){
         
-        if(maxScore === score){
-            score++
-            maxScore++;
+        if(game.maxScore === game.score){
+            game.score++
+            game.maxScore++;
         } else {
-            score++;
+            game.score++;
         }
     } else if(req.query.result === "incorrect"){
-        score = 0;
+        game.score = 0;
     } else if(req.query.score){
-        score = Number(req.query.score);
+        game.score = Number(req.query.score);
     }
 
-    while (!playerCollegeForAnswer || !playerFirstNameForAnswer || !playerLastNameForAnswer) {
+    while (!game.playerCollegeForAnswer || !game.playerFirstNameForAnswer || !game.playerLastNameForAnswer) {
       let teamNumber = validTeams[Math.floor(Math.random() * validTeams.length)];
       console.log(teamNumber);
       let players = await getTeamPlayers(teamNumber);
@@ -237,15 +258,15 @@ app.get("/CollegeCheck", async (req, res) => {
       if (validPlayers.length === 0) continue;
 
       const randomPlayer = validPlayers[Math.floor(Math.random() * validPlayers.length)];
-      playerCollegeForAnswer = randomPlayer.college;
-      playerFirstNameForAnswer = randomPlayer.firstname;
-      playerLastNameForAnswer = randomPlayer.lastname;
+      game.playerCollegeForAnswer = randomPlayer.college;
+      game.playerFirstNameForAnswer = randomPlayer.firstname;
+      game.playerLastNameForAnswer = randomPlayer.lastname;
 
-      console.log(playerCollegeForAnswer);
+      console.log(game.playerCollegeForAnswer);
     }
 
-    const playerNameForAnswer = `${playerFirstNameForAnswer} ${playerLastNameForAnswer}`;
-    const choicesArray = await generateOtherChoices(playerCollegeForAnswer);
+    const playerNameForAnswer = `${game.playerFirstNameForAnswer} ${game.playerLastNameForAnswer}`;
+    const choicesArray = await generateOtherChoices(game.playerCollegeForAnswer);
 
 
     res.render("college-check.ejs", {
@@ -253,10 +274,10 @@ app.get("/CollegeCheck", async (req, res) => {
       choices: choicesArray,
       college: req.query.answer,
       result: req.query.result,
-      score: score,
-      maxScore,
-      lives,
-      streak
+      score: game.score,
+      maxScore: game.maxScore,
+      lives: game.lives,
+      streak: game.streak
     });
 
   } catch (error) {
@@ -271,40 +292,43 @@ Verifies whether the user picked the right answer
 Does not move on the next question until the Next button is clicked
 */
 app.post("/CollegeCheck", async (req, res) => {
+
+    const game = req.session.collegeGame;
+
     console.log(req.body);
     const selected = req.body.option;
-    const result = selected === playerCollegeForAnswer ? "correct" : "incorrect";
-    const answer = playerCollegeForAnswer;
+    const result = selected === game.playerCollegeForAnswer ? "correct" : "incorrect";
+    const answer = game.playerCollegeForAnswer;
 
-    const otherChoices = await generateOtherChoices(playerCollegeForAnswer);
+    const otherChoices = await generateOtherChoices(game.playerCollegeForAnswer);
     const allChoices = [selected, ...otherChoices.filter(c => c !== selected)];
     const shuffledChoices = allChoices.sort(() => 0.5 - Math.random());
 
     if(result === "correct"){
         
-        if(maxScore === score){
-            score++
-            maxScore++;
-            streak++
+        if(game.maxScore === game.score){
+            game.score++
+            game.maxScore++;
+            game.streak++
         } else {
-            score++;
-            streak++
+            game.score++;
+            game.streak++
         }
         } else if(result === "incorrect"){
             //score = 0;
-            lives--
-            streak = 0
+            game.lives--
+            game.streak = 0
         }
 
     res.render("college-check.ejs", {
-        player: `${playerFirstNameForAnswer} ${playerLastNameForAnswer}`,
+        player: `${game.playerFirstNameForAnswer} ${game.playerLastNameForAnswer}`,
         choices: shuffledChoices,
         college: answer,
         result,
-        score,
-        maxScore,
-        lives,
-        streak
+        score: game.score,
+        maxScore: game.maxScore,
+        lives: game.lives,
+        streak: game.streak
     });
 });
 
@@ -314,11 +338,13 @@ Allows the user the skip a question
 Score and maxscore stay the same
 */
 app.post("/skip", (req, res) => {
-    playerCollegeForAnswer = null;
-    streak = 0;
+
+    const game = req.session.collegeGame;
+    game.playerCollegeForAnswer = null;
+    game.streak = 0;
     let currentScore;
-    if (score != 0){
-        currentScore = score - 1;
+    if (game.score != 0){
+        currentScore = game.score - 1;
     } else {
         currentScore = 0;
     }
@@ -332,7 +358,8 @@ Must set college answer to null it generate a new player/college question
 */
 app.post("/next", (req, res) => {
     
-    playerCollegeForAnswer = null;
+    const game = req.session.collegeGame;
+    game.playerCollegeForAnswer = null;
     res.redirect("/CollegeCheck");
 });
 
@@ -343,10 +370,12 @@ Allows user to restart the game with 3 lives
 MaxScore is preserved
 */
 app.post("/restart", (req, res) => {
+
+    const game = req.session.collegeGame;
     
-    score = 0;
-    lives = 3;
-    playerCollegeForAnswer = null;
+    game.score = 0;
+    game.lives = 3;
+    game.playerCollegeForAnswer = null;
     res.redirect("/CollegeCheck");
 });
 /*
@@ -359,14 +388,6 @@ app.post("/exit", (req, res) => {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-//global variables for the NumberCheck games
-let JerseyPlayerNumberForAnswer = null;
-let JerseyPlayerFirstNameForAnswer = null;
-let JerseyPlayerLastNameForAnswer = null;
-let JerseyScore = 0
-let JerseyMaxScore = 0;
-let JerseyLives = 3;
-let JerseyStreak = 0
 
 //Allows the user to go to the starting page of the NumberCheck game
 app.get("/startJerseyCheck", (req, res) => {
@@ -384,12 +405,14 @@ Renders the game page with a new question
 */
 app.get("/JerseyCheck", async (req, res) => {
 
+    const game = req.session.jerseyGame;
+
     try {
         if(req.query.score){
-            JerseyScore = Number(req.query.score);
+            game.JerseyScore = Number(req.query.score);
         }
 
-        while(!JerseyPlayerFirstNameForAnswer || !JerseyPlayerLastNameForAnswer || !JerseyPlayerNumberForAnswer){
+        while(!game.JerseyPlayerFirstNameForAnswer || !game.JerseyPlayerLastNameForAnswer || !game.JerseyPlayerNumberForAnswer){
             let teamNumber = validTeams[Math.floor(Math.random() * validTeams.length)];
             let players = await getTeamPlayers(teamNumber);
 
@@ -408,31 +431,29 @@ app.get("/JerseyCheck", async (req, res) => {
             if (validPlayers.length === 0) continue;
 
             const randomPlayer = validPlayers[Math.floor(Math.random() * validPlayers.length)];
-            JerseyPlayerNumberForAnswer = randomPlayer.leagues.standard.jersey;
-            JerseyPlayerFirstNameForAnswer = randomPlayer.firstname;
-            JerseyPlayerLastNameForAnswer = randomPlayer.lastname;
+            game.JerseyPlayerNumberForAnswer = randomPlayer.leagues.standard.jersey;
+            game.JerseyPlayerFirstNameForAnswer = randomPlayer.firstname;
+            game.JerseyPlayerLastNameForAnswer = randomPlayer.lastname;
 
-            console.log(JerseyPlayerNumberForAnswer);
+            console.log(game.JerseyPlayerNumberForAnswer);
         }
 
-        const JerseyPlayerNameForAnswer = `${JerseyPlayerFirstNameForAnswer} ${JerseyPlayerLastNameForAnswer}`;
+        const JerseyPlayerNameForAnswer = `${game.JerseyPlayerFirstNameForAnswer} ${game.JerseyPlayerLastNameForAnswer}`;
 
 
         res.render("jersey-check.ejs", {
             player: JerseyPlayerNameForAnswer,
-            number: JerseyPlayerNumberForAnswer,
+            number: game.JerseyPlayerNumberForAnswer,
             result: req.query.result,
-            score: JerseyScore,
-            maxScore:JerseyMaxScore,
-            lives: JerseyLives,
-            streak: JerseyStreak,
+            score: game.JerseyScore,
+            maxScore: game.JerseyMaxScore,
+            lives: game.JerseyLives,
+            streak: game.JerseyStreak,
         });
     }catch(error){
         console.error("CollegeCheck error:", error.message);
         res.status(500).send("Server error. Please try again later.");
     }
-
-
 })
 
 /* 
@@ -442,37 +463,40 @@ Does not move to the next question until the user clicks next
 */
 app.post("/JerseyCheck", (req, res) => {
 
+    const game = req.session.jerseyGame;
+
     console.log(req.body);
     const selected = req.body.option;
     const answer = req.body.answer;
-    const result = selected === answer ? "correct" : "incorrect";
+    const result = Number(selected) === Number(answer) ? "correct" : "incorrect";
+
 
 
     if(result === "correct"){
         
-        if(JerseyMaxScore === JerseyScore){
-            JerseyScore++
-            JerseyMaxScore++;
-            JerseyStreak++
+        if(game.JerseyMaxScore === game.JerseyScore){
+            game.JerseyScore++
+            game.JerseyMaxScore++;
+            game.JerseyStreak++
         } else {
-            JerseyScore++;
-            JerseyStreak++
+            game.JerseyScore++;
+            game.JerseyStreak++
         }
     } else if(result === "incorrect"){
             //score = 0;
-            JerseyScore = 0;
-            JerseyLives--
-            JerseyStreak = 0
+            
+            game.JerseyLives--
+            game.JerseyStreak = 0
     }
 
     res.render("jersey-check.ejs", {
-        player: `${JerseyPlayerFirstNameForAnswer} ${JerseyPlayerLastNameForAnswer}`,
+        player: `${game.JerseyPlayerFirstNameForAnswer} ${game.JerseyPlayerLastNameForAnswer}`,
         number: answer,
         result,
-        score: JerseyScore,
-        maxScore: JerseyMaxScore,
-        lives: JerseyLives,
-        streak: JerseyStreak
+        score: game.JerseyScore,
+        maxScore: game.JerseyMaxScore,
+        lives: game.JerseyLives,
+        streak: game.JerseyStreak
     });
 
 });
@@ -483,8 +507,10 @@ Allows the user to move on the next question
 Renders a new question
 */
 app.post("/JerseyNext", (req, res) => {
+
+    const game = req.session.jerseyGame;
     
-    JerseyPlayerNumberForAnswer = null;
+    game.JerseyPlayerNumberForAnswer = null;
     res.redirect("/JerseyCheck");
 });
 
@@ -494,11 +520,14 @@ Allows the user to skip a question
 Everything is kept the same but a point is taken off the score and the streak is reset
 */
 app.post("/JerseySkip", (req, res) => {
-    JerseyPlayerNumberForAnswer = null;
-    JerseyStreak = 0;
+
+    const game = req.session.jerseyGame;
+
+    game.JerseyPlayerNumberForAnswer = null;
+    game.JerseyStreak = 0;
     let currentScore;
-    if (JerseyScore != 0){
-        currentScore = JerseyScore - 1;
+    if (game.JerseyScore != 0){
+        currentScore = game.JerseyScore - 1;
     } else {
         currentScore = 0;
     }
@@ -511,10 +540,12 @@ Restarts the game by resetting your score, lives and streak
 */
 app.post("/JerseyRestart", (req, res) => {
     
-    JerseyScore = 0;
-    JerseyLives = 3;
-    JerseyStreak = 0;
-    JerseyPlayerNumberForAnswer = null;
+    const game = req.session.jerseyGame;
+
+    game.JerseyScore = 0;
+    game.JerseyLives = 3;
+    game.JerseyStreak = 0;
+    game.JerseyPlayerNumberForAnswer = null;
     res.redirect("/JerseyCheck");
 
 });
