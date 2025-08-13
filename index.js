@@ -160,6 +160,18 @@ app.post("/login", passport.authenticate("local", {
     failureRedirect: "/login"
 }))
 
+//POST request to logout
+
+app.post("/logout", (req, res) => {
+    req.logout((err) => {
+        if(err){
+            console.log(err);
+        } else {
+            res.redirect("/");
+        }
+    });
+});
+
 //GET Request to render the homepage
 app.get("/", (req, res) => {
 
