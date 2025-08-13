@@ -4,6 +4,9 @@ import axios from "axios";
 import pg from "pg";
 import env from "dotenv";
 import bcrypt from "bcrypt";
+import session from "express-session";
+import passport from "passport";
+import { Strategy } from "passport-local";
 
 env.config();
 
@@ -17,6 +20,18 @@ const saltRounds = 10;
 //Middleware
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+
+app.use(session({
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 30
+    }, 
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Global Cache without session
 let teamCache = {};
@@ -113,8 +128,17 @@ app.post("/register", async (req, res) => {
             } else {
 
               try{
-                await db.query("INSERT INTO users(username, password) VALUES($1, $2)", [username, hash]);
-                res.redirect(`/?username=${username}`);  
+                const result = await db.query("INSERT INTO users(username, password) VALUES($1, $2) RETURNING *", [username, hash]);
+                const user = result.rows[0];
+                // res.redirect(`/?username=${username}`);
+                req.login(user, (err) => {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).send("Login after register failed");
+                    }
+                    return res.redirect("/");
+                });
+                
               } catch(err){
                 console.error(err);
                 res.status(500).send("Cannot insert into DB");
@@ -131,44 +155,19 @@ app.post("/register", async (req, res) => {
 
 //POST request to login route that will authenticate the user
 
-app.post("/login", async (req, res) => {
-
-    console.log(req.body);
-    const username = req.body.username;
-    const password = req.body.password;
-
-    try{
-        const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
-
-        if(result.rows.length > 0){
-          const storedPassword = result.rows[0].password;
-          bcrypt.compare(password, storedPassword, (err, result) => {
-            if(err){
-                console.log(err);
-                res.status(500).send(err);
-            } else {
-                if(result){
-                    res.redirect(`/?username=${username}`); 
-                } else {
-                    console.log("Incorrect password");
-                }
-
-            }
-            });  
-        } else {
-            console.log("User not found");
-        }
-        
-    } catch(err){
-        console.log(err);
-        res.status(500).send("Login error");
-    }
-});
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login"
+}))
 
 //GET Request to render the homepage
 app.get("/", (req, res) => {
 
-  res.render("index.ejs", { username: req.query.username || null });
+    if(req.isAuthenticated()){
+        res.render("index.ejs", {username: req.user.username});
+    } else {
+        res.render("index.ejs");
+    }
 
 });
 
@@ -508,6 +507,51 @@ app.post("/JerseyRestart", (req, res) => {
 
 });
 
+//Implementing passport strategy
+
+passport.use(new Strategy(async function verify(username, password, cb) {
+
+    try{
+        const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+
+        if(result.rows.length > 0){
+          const user = result.rows[0];
+          const storedPassword = user.password;
+          bcrypt.compare(password, storedPassword, (err, result) => {
+            if(err){
+                // console.log(err);
+                // res.status(500).send(err);
+                return cb(err);
+            } else {
+                if(result){
+                    // res.redirect(`/?username=${username}`); 
+                    return cb(null, user);
+                } else {
+                    // console.log("Incorrect password");
+                    return cb(null, false);
+                }
+            }
+            });  
+        } else {
+            // console.log("User not found");
+            return cb(null, false);
+        }
+        
+    } catch(err){
+        // console.log(err);
+        // res.status(500).send("Login error");
+        return cb(err);
+    }
+
+}));
+
+passport.serializeUser((user, cb) => {
+    cb(null, user);
+});
+
+passport.deserializeUser((user, cb) => {
+    cb(null, user);
+});
 //Server running on port 3000
 app.listen(PORT, () => {
     console.log(`Listening on Port ${PORT}`);
