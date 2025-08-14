@@ -1,0 +1,121 @@
+body{
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    margin: 0px;
+}
+
+header{
+    background-color: #F4F8D3;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+header a{
+    text-decoration: none;
+    width: 25%;
+    text-align: right;
+}
+
+header p{
+    color: black;
+    font-size: 25px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header p:hover{
+    background-color: #F7CFD8;
+    border-radius: 5px;
+    transition: 15ms linear;
+}
+
+header div{
+    height: 90px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.exit-btn{
+    display: flex;
+    justify-content: right;
+}
+
+div.logo{
+    display: flex;
+    justify-content: left;
+    margin-left: 10px;
+}
+
+.title{
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.title h1{
+    font-size: 6rem;
+}
+
+section{
+    display: flex;
+    flex-direction: row;
+}
+
+section div{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+section h2{
+    font-size: 4rem;
+}
+
+table, th, td {
+  border: 1px solid black;
+  padding: 10px;
+  border-collapse: collapse;
+  margin: 10px;
+}
+
+th{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bolder;
+    font-size: 2.5rem;
+    background-color: #96D4D4;
+}
+
+td{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 1.5rem;
+}
+
+section table{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.anton-regular {
+  font-family: "Anton", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.anton-sc-regular {
+  font-family: "Anton SC", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0px;
+}

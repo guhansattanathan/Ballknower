@@ -4,44 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboard</title>
+
+    <link rel="stylesheet" href="/styles/leaderboard.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton+SC&family=League+Gothic&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <header>  
 
-    <h3>CollegeCheck Leaderboard: </h3>
-    <table>
-        <tr>
-            <th>Rank</th>
-            <th>Username</th>
-            <th>Score</th>
-        </tr>
-        
-        <% for(let i = 0; i < CollegeLeadersArray.length; i++){%>
-            <tr>
-                <td><%= i+1 %></td>
-                <td><%= CollegeLeadersArray[i].username %></td>
-                <td><%= CollegeLeadersArray[i].collegecheckhs %></td>
-            </tr>
-        <% } %>
-    </table>
+    <div class="logo">
+        <img src="/images/logo.png" alt="Logo" height="60px">
+    </div>
 
-    <br />
-    <br />
+    <div class="exit-btn">
+       <a href="/">
+        <div>
+            <p>Exit</p>
+        </div>
+       </a>   
+    </div>
+    </header>
 
-    <h3>NumberCheck Leaderboard: </h3>
-    <table>
-        <tr>
-            <th>Rank</th>
-            <th>Username</th>
-            <th>Score</th>
-        </tr>
-        
-        <% for(let i = 0; i < NumberLeadersArray.length; i++){%>
-            <tr>
-                <td><%= i+1 %></td>
-                <td><%= NumberLeadersArray[i].username %></td>
-                <td><%= NumberLeadersArray[i].numbercheckhs %></td>
-            </tr>
-        <% } %>
-    </table>
+    <div class="title">
+        <h1 class="anton-sc-regular">Leaderboards</h1>
+    </div>
+
+    <section>
+        <div class="leaderboard1">
+            <h2 class="anton-sc-regular">CollegeCheck</h2>
+            <table>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Score</th>
+                </tr>
+                
+                <% for(let i = 0; i < CollegeLeadersArray.length; i++){%>
+                    <tr>
+                        <td><%= i+1 %></td>
+                        <td><%= CollegeLeadersArray[i].username %></td>
+                        <td><%= CollegeLeadersArray[i].collegecheckhs %></td>
+                    </tr>
+                <% } %>
+            </table>
+        </div>
+
+        <div class="leaderboard2">
+            <h2 class="anton-sc-regular">NumberCheck</h2>
+            <table>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Score</th>
+                </tr>
+                
+                <% for(let i = 0; i < NumberLeadersArray.length; i++){%>
+                    <tr>
+                        <td><%= i+1 %></td>
+                        <td><%= NumberLeadersArray[i].username %></td>
+                        <td><%= NumberLeadersArray[i].numbercheckhs %></td>
+                    </tr>
+                <% } %>
+            </table>
+        </div>
+    </section>
+    
 </body>
 </html>

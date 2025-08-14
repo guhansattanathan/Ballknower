@@ -221,17 +221,23 @@ app.post("/logout", (req, res) => {
 Leaderboard implementation starts here
 */
 
-app.get("/leaderboard", async (req, res) => {
+app.get("/leaderboards", async (req, res) => {
 
-    const leadersForCollegeCheck = await db.query("SELECT username, collegecheckhs FROM users ORDER BY collegecheckhs DESC LIMIT 20");
-    const leadersForNumberCheck = await db.query("SELECT username, numbercheckhs FROM users ORDER BY numbercheckhs DESC LIMIT 20")
-    
-    const CollegeLeadersArray = [...leadersForCollegeCheck.rows];
-    const NumberLeadersArray = [...leadersForNumberCheck.rows];
-    res.render("leaderboard.ejs", {
-        CollegeLeadersArray,
-        NumberLeadersArray
-    });
+    try{
+        const leadersForCollegeCheck = await db.query("SELECT username, collegecheckhs FROM users ORDER BY collegecheckhs DESC LIMIT 20");
+        const leadersForNumberCheck = await db.query("SELECT username, numbercheckhs FROM users ORDER BY numbercheckhs DESC LIMIT 20")
+        
+        const CollegeLeadersArray = [...leadersForCollegeCheck.rows];
+        const NumberLeadersArray = [...leadersForNumberCheck.rows];
+        
+        res.render("leaderboard.ejs", {
+            CollegeLeadersArray,
+            NumberLeadersArray
+        });
+
+    } catch(err){
+        res.status(504).send("Cannot retrieve data at the moment");
+    }
 });
 
 //GET Request to render the homepage
@@ -349,7 +355,6 @@ app.post("/CollegeCheck", async (req, res) => {
             game.streak++
         }
         } else if(result === "incorrect"){
-            //score = 0;
             game.lives--
             game.streak = 0
         }
