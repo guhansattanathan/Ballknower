@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+</head>
+<body>
+
+    <h3>CollegeCheck Leaderboard: </h3>
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Score</th>
+        </tr>
+        
+        <% for(let i = 0; i < CollegeLeadersArray.length; i++){%>
+            <tr>
+                <td><%= i+1 %></td>
+                <td><%= CollegeLeadersArray[i].username %></td>
+                <td><%= CollegeLeadersArray[i].collegecheckhs %></td>
+            </tr>
+        <% } %>
+    </table>
+
+    <br />
+    <br />
+
+    <h3>NumberCheck Leaderboard: </h3>
+    <table>
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Score</th>
+        </tr>
+        
+        <% for(let i = 0; i < NumberLeadersArray.length; i++){%>
+            <tr>
+                <td><%= i+1 %></td>
+                <td><%= NumberLeadersArray[i].username %></td>
+                <td><%= NumberLeadersArray[i].numbercheckhs %></td>
+            </tr>
+        <% } %>
+    </table>
+</body>
+</html>

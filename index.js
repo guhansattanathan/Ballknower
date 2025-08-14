@@ -21,6 +21,7 @@ const saltRounds = 10;
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
+//Middleware to setup sessionss
 app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
@@ -30,9 +31,11 @@ app.use(session({
     }, 
 }));
 
+//Middlware for passport
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Middleware for creating session variables
 app.use((req, res, next) => {
   if (!req.session.collegeGame) {
     req.session.collegeGame = {
@@ -211,6 +214,23 @@ app.post("/logout", (req, res) => {
         } else {
             res.redirect("/");
         }
+    });
+});
+
+/* 
+Leaderboard implementation starts here
+*/
+
+app.get("/leaderboard", async (req, res) => {
+
+    const leadersForCollegeCheck = await db.query("SELECT username, collegecheckhs FROM users ORDER BY collegecheckhs DESC LIMIT 20");
+    const leadersForNumberCheck = await db.query("SELECT username, numbercheckhs FROM users ORDER BY numbercheckhs DESC LIMIT 20")
+    
+    const CollegeLeadersArray = [...leadersForCollegeCheck.rows];
+    const NumberLeadersArray = [...leadersForNumberCheck.rows];
+    res.render("leaderboard.ejs", {
+        CollegeLeadersArray,
+        NumberLeadersArray
     });
 });
 
