@@ -36,6 +36,14 @@
         </p>
     </div>
 
+    <% if(locals.message) { %>
+        <section style="display: flex; justify-content: center;">
+            <div class="alert alert-danger" role="alert" style="width: 50%; background-color: #DA6C6C; border-radius: 15px; border:  2px solid black; font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+            <p style="display: flex; justify-content: center; font-size: 30px;"><%= message %></p>
+            </div>
+        </section>
+    <% } %>
+
     <section class="register">
 
         <form action="/login" method="post">

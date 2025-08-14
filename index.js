@@ -43,6 +43,7 @@ app.use((req, res, next) => {
       maxScore: 0,
       lives: 3,
       streak: 0,
+      username: req.user ? req.user.username : null
     };
   }
 
@@ -55,6 +56,7 @@ app.use((req, res, next) => {
       JerseyMaxScore: 0,
       JerseyLives: 3,
       JerseyStreak: 0,
+      username: req.user ? req.user.username : null
     };
   }
 
@@ -134,12 +136,20 @@ async function generateOtherChoices(correctCollege) {
 
 //GET request to register page
 app.get("/register", (req, res) =>{
+    if(req.query.success === "false"){
+        res.render("register.ejs", {message: "This username is already taken!"});
+    } else {
     res.render("register.ejs");
+    }
 })
 
 //GET request to login page
 app.get("/login", (req, res) => {
-    res.render("login.ejs");
+    if(req.query.success === "false"){
+        res.render("login.ejs", {message: "Incorrect username/password, check again!"})
+    } else {
+      res.render("login.ejs");  
+    }
 })
 
 //POST request to register route that will insert user info into the database
@@ -158,7 +168,9 @@ app.post("/register", async (req, res) => {
               try{
                 const result = await db.query("INSERT INTO users(username, password) VALUES($1, $2) RETURNING *", [username, hash]);
                 const user = result.rows[0];
-                // res.redirect(`/?username=${username}`);
+                
+                req.session.collegeGame.username = username;
+
                 req.login(user, (err) => {
                     if (err) {
                         console.log(err);
@@ -169,7 +181,8 @@ app.post("/register", async (req, res) => {
                 
               } catch(err){
                 console.error(err);
-                res.status(500).send("Cannot insert into DB");
+
+                res.redirect("/register?success=false");
               } 
               
             }
@@ -184,8 +197,9 @@ app.post("/register", async (req, res) => {
 //POST request to login route that will authenticate the user
 
 app.post("/login", passport.authenticate("local", {
+    
     successRedirect: "/",
-    failureRedirect: "/login"
+    failureRedirect: "/login?success=false"
 }))
 
 //POST request to logout
@@ -319,6 +333,19 @@ app.post("/CollegeCheck", async (req, res) => {
             game.lives--
             game.streak = 0
         }
+
+    if(game.lives === 0){
+
+        if(game.username){
+            const username = game.username;
+            const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+            const storedMaxscore = result.rows[0].collegecheckhs;
+            if(game.maxScore > storedMaxscore){
+                await db.query("UPDATE users SET collegecheckhs = $1 WHERE username = $2", [game.maxScore, username]);
+            }
+        }   
+    }
+        
 
     res.render("college-check.ejs", {
         player: `${game.playerFirstNameForAnswer} ${game.playerLastNameForAnswer}`,
@@ -461,7 +488,7 @@ POST request to the JerseyCheck endpoint
 Compares the users answer to the right answer and displays the approporiate message
 Does not move to the next question until the user clicks next
 */
-app.post("/JerseyCheck", (req, res) => {
+app.post("/JerseyCheck", async (req, res) => {
 
     const game = req.session.jerseyGame;
 
@@ -469,8 +496,6 @@ app.post("/JerseyCheck", (req, res) => {
     const selected = req.body.option;
     const answer = req.body.answer;
     const result = Number(selected) === Number(answer) ? "correct" : "incorrect";
-
-
 
     if(result === "correct"){
         
@@ -487,6 +512,18 @@ app.post("/JerseyCheck", (req, res) => {
             
             game.JerseyLives--
             game.JerseyStreak = 0
+    }
+
+    if(game.JerseyLives === 0){
+
+        if(game.username){
+            const username = game.username;
+            const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+            const storedMaxscore = result.rows[0].numbercheckhs;
+            if(game.JerseyMaxScore > storedMaxscore){
+                await db.query("UPDATE users SET numbercheckhs = $1 WHERE username = $2", [game.JerseyMaxScore, username]);
+            }
+        }   
     }
 
     res.render("jersey-check.ejs", {

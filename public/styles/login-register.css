@@ -58,15 +58,18 @@ div.logo{
 .title{
     display: flex;
     justify-content: center;
-    font-size: 3rem;
+    margin: 10px;
+}
 
+.title h1{
+    font-size: 5rem;
 }
 
 .subheading{
     display: flex;
     justify-content: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 2rem;
+    font-size: 2.5rem;
 }
 
 .register{
