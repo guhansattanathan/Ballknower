@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Anton+SC&family=League+Gothic&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
 </head>
 <body>
     <header>  
@@ -42,7 +44,20 @@
                 </tr>
                 
                 <% for(let i = 0; i < CollegeLeadersArray.length; i++){%>
-                    <tr>
+                    <% switch (i+1) {
+                        case 1: %>
+                            <tr style="background-color: #FFD700;">
+                        <% break; 
+                        case 2: %>
+                            <tr style="background-color: #c0c0c0;">  
+                        <% break;
+                        case 3: %>
+                            <tr style="background-color: #CD7F32;">
+                        <% break        
+                        default:
+                            break;
+                        %>    
+                    <% } %>
                         <td><%= i+1 %></td>
                         <td><%= CollegeLeadersArray[i].username %></td>
                         <td><%= CollegeLeadersArray[i].collegecheckhs %></td>
@@ -61,7 +76,20 @@
                 </tr>
                 
                 <% for(let i = 0; i < NumberLeadersArray.length; i++){%>
-                    <tr>
+                    <% switch (i+1) {
+                        case 1: %>
+                            <tr style="background-color: #FFD700;">
+                        <% break; 
+                        case 2: %>
+                            <tr style="background-color: #c0c0c0;">  
+                        <% break;
+                        case 3: %>
+                            <tr style="background-color: #CD7F32;">
+                        <% break        
+                        default:
+                            break;
+                        %>    
+                    <% } %>
                         <td><%= i+1 %></td>
                         <td><%= NumberLeadersArray[i].username %></td>
                         <td><%= NumberLeadersArray[i].numbercheckhs %></td>
