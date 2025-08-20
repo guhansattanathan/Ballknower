@@ -22,8 +22,6 @@ const saltRounds = 10;
 //Middleware
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
-app.use(helmet());
-app.use(compression());
 
 //Middleware to setup sessionss
 app.use(session({
