@@ -111,7 +111,6 @@ async function getTeamPlayers(teamID){
         return teamCache[cacheKey]
     } else {
 
-        console.log(randomSeason);
         const response = await axios.get(`https://api-nba-v1.p.rapidapi.com/players?season=${randomSeason}&team=${teamID}`, configForCollege)
         teamCache[cacheKey] = response.data["response"];
         return teamCache[cacheKey];
