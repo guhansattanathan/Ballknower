@@ -292,7 +292,7 @@ app.get("/CollegeCheck", async (req, res) => {
 
     while (!game.playerCollegeForAnswer || !game.playerFirstNameForAnswer || !game.playerLastNameForAnswer) {
       let teamNumber = validTeams[Math.floor(Math.random() * validTeams.length)];
-      console.log(teamNumber);
+      
       let players = await getTeamPlayers(teamNumber);
 
       if (!players || players.length === 0) continue;
@@ -305,7 +305,6 @@ app.get("/CollegeCheck", async (req, res) => {
       game.playerFirstNameForAnswer = randomPlayer.firstname;
       game.playerLastNameForAnswer = randomPlayer.lastname;
 
-      console.log(game.playerCollegeForAnswer);
     }
 
     const playerNameForAnswer = `${game.playerFirstNameForAnswer} ${game.playerLastNameForAnswer}`;
@@ -338,7 +337,6 @@ app.post("/CollegeCheck", async (req, res) => {
 
     const game = req.session.collegeGame;
 
-    console.log(req.body);
     const selected = req.body.option;
     const result = selected === game.playerCollegeForAnswer ? "correct" : "incorrect";
     const answer = game.playerCollegeForAnswer;
@@ -490,7 +488,6 @@ app.get("/JerseyCheck", async (req, res) => {
             game.JerseyPlayerFirstNameForAnswer = randomPlayer.firstname;
             game.JerseyPlayerLastNameForAnswer = randomPlayer.lastname;
 
-            console.log(game.JerseyPlayerNumberForAnswer);
         }
 
         const JerseyPlayerNameForAnswer = `${game.JerseyPlayerFirstNameForAnswer} ${game.JerseyPlayerLastNameForAnswer}`;
@@ -520,7 +517,6 @@ app.post("/JerseyCheck", async (req, res) => {
 
     const game = req.session.jerseyGame;
 
-    console.log(req.body);
     const selected = req.body.option;
     const answer = req.body.answer;
     const result = Number(selected) === Number(answer) ? "correct" : "incorrect";
