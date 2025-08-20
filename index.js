@@ -7,6 +7,8 @@ import bcrypt from "bcrypt";
 import session from "express-session";
 import passport from "passport";
 import { Strategy } from "passport-local";
+import helmet from "helmet";
+import compression from "compression";
 
 env.config();
 
@@ -20,6 +22,8 @@ const saltRounds = 10;
 //Middleware
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+app.use(helmet());
+app.use(compression());
 
 //Middleware to setup sessionss
 app.use(session({
