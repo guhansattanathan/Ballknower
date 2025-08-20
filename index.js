@@ -83,15 +83,15 @@ const configForCollege = {
 }
 
 //Configuration for Database
-const db = new pg.Client({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-    port: process.env.DB_PORT
-});
+// const db = new pg.Client({
+//     user: process.env.DB_USER,
+//     host: process.env.DB_HOST,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_DATABASE,
+//     port: process.env.DB_PORT
+// });
 
-db.connect();
+// db.connect();
 
 const { Pool } = pg;
 
@@ -180,7 +180,7 @@ app.post("/register", async (req, res) => {
             } else {
 
               try{
-                const result = await db.query("INSERT INTO users(username, password) VALUES($1, $2) RETURNING *", [username, hash]);
+                const result = await pool.query("INSERT INTO users(username, password) VALUES($1, $2) RETURNING *", [username, hash]);
                 const user = result.rows[0];
                 
                 req.session.collegeGame.username = username;
@@ -235,8 +235,8 @@ Leaderboard implementation starts here
 app.get("/leaderboards", async (req, res) => {
 
     try{
-        const leadersForCollegeCheck = await db.query("SELECT username, collegecheckhs FROM users ORDER BY collegecheckhs DESC LIMIT 20");
-        const leadersForNumberCheck = await db.query("SELECT username, numbercheckhs FROM users ORDER BY numbercheckhs DESC LIMIT 20")
+        const leadersForCollegeCheck = await pool.query("SELECT username, collegecheckhs FROM users ORDER BY collegecheckhs DESC LIMIT 20");
+        const leadersForNumberCheck = await pool.query("SELECT username, numbercheckhs FROM users ORDER BY numbercheckhs DESC LIMIT 20")
         
         const CollegeLeadersArray = [...leadersForCollegeCheck.rows];
         const NumberLeadersArray = [...leadersForNumberCheck.rows];
@@ -372,10 +372,10 @@ app.post("/CollegeCheck", async (req, res) => {
 
         if(game.username){
             const username = game.username;
-            const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+            const result = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
             const storedMaxscore = result.rows[0].collegecheckhs;
             if(game.maxScore > storedMaxscore){
-                await db.query("UPDATE users SET collegecheckhs = $1 WHERE username = $2", [game.maxScore, username]);
+                await pool.query("UPDATE users SET collegecheckhs = $1 WHERE username = $2", [game.maxScore, username]);
             }
         }   
     }
@@ -550,10 +550,10 @@ app.post("/JerseyCheck", async (req, res) => {
 
         if(game.username){
             const username = game.username;
-            const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+            const result = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
             const storedMaxscore = result.rows[0].numbercheckhs;
             if(game.JerseyMaxScore > storedMaxscore){
-                await db.query("UPDATE users SET numbercheckhs = $1 WHERE username = $2", [game.JerseyMaxScore, username]);
+                await pool.query("UPDATE users SET numbercheckhs = $1 WHERE username = $2", [game.JerseyMaxScore, username]);
             }
         }   
     }
@@ -624,7 +624,7 @@ app.post("/JerseyRestart", (req, res) => {
 passport.use(new Strategy(async function verify(username, password, cb) {
 
     try{
-        const result = await db.query("SELECT * FROM users WHERE username = $1", [username]);
+        const result = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
 
         if(result.rows.length > 0){
           const user = result.rows[0];
