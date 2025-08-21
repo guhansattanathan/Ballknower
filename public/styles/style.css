@@ -175,6 +175,7 @@ div.coming-soon{
 
 .inspiration div{
     display: flex;
+    flex-direction: column;
     justify-content: center;
 }
 

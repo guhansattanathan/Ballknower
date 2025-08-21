@@ -81,7 +81,7 @@ const configForCollege = {
 }
 
 //Configuration for Database
-// const db = new pg.Client({
+// const db = new pg.Client({s
 //     user: process.env.DB_USER,
 //     host: process.env.DB_HOST,
 //     password: process.env.DB_PASSWORD,
