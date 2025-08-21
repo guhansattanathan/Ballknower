@@ -17,4 +17,9 @@ A full-stack NBA trivia platform where elite ball knowers can test their knowled
 ## Demo  
 👉 [Live Site](https://www.airballtrivia.com/)  
 
-![screenshot](./public/images/college-logo.gif)  
+## Screenshots
+![screenshot](./public/images/front-page.png)
+![screenshot](./public/images/game-catalog.png) 
+![screenshot](./public/images/college-check.png) 
+![screenshot](./public/images/number-check.png) 
+![screenshot](./public/images//leaderboard.png)   
